@@ -1,3 +1,9 @@
+# = pgconn.rb
+# * callback and errback do the same thing.  If that is expected, use
+# the same block for both.
+# * There's no reason for the module Sequel module Postgres stuff if you
+# are just reopening ::PGconn.
+
 module Sequel
   module Postgres
     class ::PGconn
@@ -10,15 +16,11 @@ module Sequel
         f = Fiber.current
         
         deferrable.callback do |res| 
-          # puts "!!! callback: #{res}"
-          
           # check for alive?, otherwise we probably resume a dead fiber, because someone has killed our session e.g. "select pg_terminate_backend('procpid');"
           f.resume(res) if f.alive?
         end
         
         deferrable.errback  do |err| 
-          # puts "!!! errback: #{err}"
-
           # check for alive?, otherwise we probably resume a dead fiber, because someone has killed our session e.g. "select pg_terminate_backend('procpid');"
           f.resume(err) if f.alive?
         end

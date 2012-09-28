@@ -1,10 +1,25 @@
-spec = Gem::Specification.new do |s|
-  s.name = 'em-postgresql-sequel'
-  s.version = '0.1'
-  s.summary = "glue together eventmachine, postgresql and sequel"
-  s.description = %{glue together eventmachine, postgresql and sequel}
-  s.files = Dir['lib/**/**']
+# -*- encoding: utf-8 -*-
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'em-postgresql-sequel/version'
 
-  s.author = "Jan Zimmek"
-  s.email = "jan.zimmek@web.de"
+Gem::Specification.new do |gem|
+  gem.name          = "em-postgresql-sequel"
+  gem.version       = Em::Postgresql::Sequel::VERSION
+  gem.authors       = ["Jan Zimmek, Asher Van Brunt"]
+  gem.email         = ["jan.zimmek@web.de, asher@okbreathe.com"]
+  gem.description   = %q{glue together eventmachine, postgresql and sequel}
+  gem.summary       = %q{glue together eventmachine, postgresql and sequel}
+  gem.homepage      = ""
+
+  gem.files         = `git ls-files`.split($/)
+  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.require_paths = ["lib"]
+
+  gem.add_dependency "eventmachine"
+  gem.add_dependency "pg"
+  gem.add_dependency "sequel"
+
+  gem.add_development_dependency "rspec"
 end

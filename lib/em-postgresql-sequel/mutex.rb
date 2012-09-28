@@ -1,6 +1,9 @@
 module EM
   module Sequel
     class Mutex
+
+      class SynchronizationError < StandardError; end
+
       def initialize
         @waiting = []
         @current = nil
@@ -9,7 +12,7 @@ module EM
       def synchronize
         if @current
           if @current == Fiber.current
-            raise "already in synchronize" 
+            raise SynchronizationError, "Mutex is already in synchronize" 
           else
             @waiting << Fiber.current
             Fiber.yield
@@ -17,9 +20,9 @@ module EM
         end
         
         @current = Fiber.current
-        
+
         begin
-          yield if block_given?
+          yield
         ensure
           @current = nil
           if waiting = @waiting.shift
